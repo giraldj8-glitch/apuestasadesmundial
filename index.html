@@ -193,7 +193,7 @@
     .pool span { display: block; color: var(--muted); font-size: .72rem; text-transform: uppercase; font-weight: 850; }
     .pool strong { display: block; font-size: 1.55rem; color: var(--green); }
 
-    .metrics { display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap: 10px; }
+    .metrics { display: grid; grid-template-columns: repeat(6, minmax(0,1fr)); gap: 10px; }
     .metric, .card, .panel {
       background: rgba(37, 43, 53, .88); border: 1px solid var(--line); border-radius: var(--radius);
       box-shadow: 0 12px 34px rgba(0,0,0,.2); backdrop-filter: blur(12px);
@@ -320,6 +320,7 @@
     .badge.done, .p5 { color: var(--green); background: rgba(50,216,148,.12); border-color: rgba(50,216,148,.36); }
     .badge.pending { color: var(--gray); background: rgba(138,149,163,.09); }
     .p3 { color: var(--orange); background: rgba(255,180,67,.12); border-color: rgba(255,180,67,.34); }
+    .p2 { color: var(--cyan); background: rgba(34,199,216,.11); border-color: rgba(34,199,216,.34); }
     .p0 { color: #ffb8c4; background: rgba(255,93,115,.1); border-color: rgba(255,93,115,.3); }
 
     table { width: 100%; border-collapse: collapse; }
@@ -391,7 +392,7 @@
     .podium-card strong { color: var(--cyan); font-size: 1.45rem; }
     .podium-card.first strong { color: var(--orange); font-size: 1.7rem; }
     .table-wrap { overflow-x: auto; border-radius: var(--radius); border: 1px solid var(--line); background: rgba(37,43,53,.74); }
-    .rank-table { min-width: 860px; }
+    .rank-table { min-width: 940px; }
     .rank-table tr { transition: transform .18s ease, background .18s ease, box-shadow .18s ease; }
     .rank-table tbody tr:hover { background: rgba(52,95,234,.12); transform: scale(1.006); }
     .rank-table tr.top { background: linear-gradient(90deg, rgba(255,180,67,.14), rgba(50,216,148,.07), transparent); box-shadow: inset 4px 0 0 rgba(255,180,67,.84); }
@@ -448,6 +449,7 @@
     .player-match-card:hover { transform: translateY(-1px); border-color: rgba(27,197,255,.28); background: rgba(7,17,83,.66); }
     .player-match-card.p5 { border-color: rgba(50,216,148,.52); background: linear-gradient(135deg, rgba(50,216,148,.13), rgba(0,8,57,.55)); }
     .player-match-card.p3 { border-color: rgba(255,180,67,.5); background: linear-gradient(135deg, rgba(255,180,67,.12), rgba(0,8,57,.55)); }
+    .player-match-card.p2 { border-color: rgba(34,199,216,.48); background: linear-gradient(135deg, rgba(34,199,216,.11), rgba(0,8,57,.55)); }
     .player-match-card.p0 { border-color: rgba(255,93,115,.42); background: linear-gradient(135deg, rgba(255,93,115,.09), rgba(0,8,57,.55)); }
     .player-match-main { display: grid; grid-template-columns: minmax(0,1fr) auto minmax(0,1fr); gap: 9px; align-items: center; }
     .player-match-team { display: flex; align-items: center; gap: 7px; min-width: 0; font-weight: 850; }
@@ -457,6 +459,7 @@
     .score-tile { min-width: 34px; height: 34px; display: inline-grid; place-items: center; border-radius: 7px; border: 1px solid rgba(138,149,163,.55); color: var(--white); background: rgba(255,255,255,.04); font-variant-numeric: tabular-nums; }
     .score-pair.pred.p5 .score-tile { border-color: var(--green); color: var(--green); background: rgba(50,216,148,.08); }
     .score-pair.pred.p3 .score-tile { border-color: var(--orange); color: var(--orange); background: rgba(255,180,67,.08); }
+    .score-pair.pred.p2 .score-tile { border-color: var(--cyan); color: var(--cyan); background: rgba(34,199,216,.08); }
     .score-pair.pred.p0 .score-tile { border-color: var(--red); color: #ffb8c4; background: rgba(255,93,115,.07); }
     .score-pair.real .score-tile { border-color: rgba(27,197,255,.58); color: var(--cyan); background: rgba(27,197,255,.07); }
     .player-match-date { color: var(--gray); font-size: .82rem; text-align: center; }
@@ -696,9 +699,9 @@
         </section>
 
         <section id="screen-ranking" class="screen">
-          <div class="section-head"><div><h3>Top Apostadores</h3><p>Desempate: puntos, exactos, aciertos de ganador y nombre. Los empates solo puntúan si son marcador exacto.</p></div></div>
+          <div class="section-head"><div><h3>Top Apostadores</h3><p>Desempate: puntos, exactos, aciertos de ganador, empates acertados y nombre.</p></div></div>
           <div class="podium" id="podium"></div>
-          <div class="table-wrap"><table class="rank-table"><thead><tr><th>#</th><th>Nombre</th><th class="num">Puntos</th><th class="num">5 pts</th><th class="num">3 pts</th><th class="num">0 pts</th><th class="num">Premio</th></tr></thead><tbody id="rankingBody"></tbody></table></div>
+          <div class="table-wrap"><table class="rank-table"><thead><tr><th>#</th><th>Nombre</th><th class="num">Puntos</th><th class="num">5 pts</th><th class="num">3 pts</th><th class="num">2 pts</th><th class="num">0 pts</th><th class="num">Premio</th></tr></thead><tbody id="rankingBody"></tbody></table></div>
         </section>
 
         <section id="screen-search" class="screen">
@@ -723,15 +726,16 @@
               <div class="score-rule">
                 <div><b class="green">5 pts</b><span>Marcador exacto. Ejemplo: predicción 2-1 y resultado real 2-1.</span></div>
                 <div><b class="orange">3 pts</b><span>Ganador correcto sin marcador exacto. Solo aplica si hubo ganador: local o visitante.</span></div>
-                <div><b class="gray">0 pts</b><span>Fallo con partido finalizado o empate no exacto. Los partidos pendientes no suman y no cuentan como fallo.</span></div>
+                <div><b class="cyan">2 pts</b><span>Empate acertado sin marcador exacto. Ejemplo: predicción 0-0 y resultado real 1-1.</span></div>
+                <div><b class="gray">0 pts</b><span>Fallo con partido finalizado. Los partidos pendientes no suman y no cuentan como fallo.</span></div>
               </div>
             </div>
             <div class="rule-card rule-note">
               <h4>Empates</h4>
               <ul class="rule-list">
                 <li>Real 1-1 y predicción 1-1: <strong>5 puntos</strong>.</li>
-                <li>Real 1-1 y predicción 0-0: <strong>0 puntos</strong>.</li>
-                <li>Real 0-0 y predicción 2-2: <strong>0 puntos</strong>.</li>
+                <li>Real 1-1 y predicción 0-0: <strong>2 puntos</strong>.</li>
+                <li>Real 0-0 y predicción 2-2: <strong>2 puntos</strong>.</li>
                 <li>Predicción de empate contra victoria real: <strong>0 puntos</strong>.</li>
               </ul>
             </div>
@@ -741,6 +745,7 @@
                 <li>Mayor puntaje total.</li>
                 <li>Más marcadores exactos de 5 puntos.</li>
                 <li>Más aciertos de ganador de 3 puntos.</li>
+                <li>Más empates acertados de 2 puntos.</li>
                 <li>Nombre en orden alfabético.</li>
               </ol>
             </div>
@@ -823,25 +828,27 @@
       if (ph === rh && pa === ra) return 5;
       const predSign = Math.sign(ph - pa);
       const realSign = Math.sign(rh - ra);
+      if (predSign === 0 && realSign === 0) return 2;
       if (predSign === 0 || realSign === 0) return 0;
       return predSign === realSign ? 3 : 0;
     }
 
     function participantStats(player, matches = MATCHES) {
-      let exact = 0, signOnly = 0, missed = 0, pending = 0, total = 0;
+      let exact = 0, signOnly = 0, drawOnly = 0, missed = 0, pending = 0, total = 0;
       matches.forEach(m => {
         const pts = scorePrediction(player.predictions[m.n], state.results[m.n]);
         if (pts === null) pending++;
         else if (pts === 5) { exact++; total += 5; }
         else if (pts === 3) { signOnly++; total += 3; }
+        else if (pts === 2) { drawOnly++; total += 2; }
         else missed++;
       });
-      return { exact, signOnly, missed, pending, total };
+      return { exact, signOnly, drawOnly, missed, pending, total };
     }
 
     function ranking() {
       return state.participants.map(p => ({ ...p, stats: participantStats(p) })).sort((a,b) =>
-        b.stats.total - a.stats.total || b.stats.exact - a.stats.exact || b.stats.signOnly - a.stats.signOnly || a.name.localeCompare(b.name, 'es')
+        b.stats.total - a.stats.total || b.stats.exact - a.stats.exact || b.stats.signOnly - a.stats.signOnly || b.stats.drawOnly - a.stats.drawOnly || a.name.localeCompare(b.name, 'es')
       );
     }
 
@@ -909,6 +916,7 @@
         ['Partidos finalizados', finished + '/72', Math.round(finished / 72 * 100) + '% completado'],
         ['Líder actual', leader ? leader.name : 'Sin datos', leader ? leader.stats.total + ' pts' : ''],
         ['Exactos totales', rank.reduce((s,p)=>s+p.stats.exact,0), 'Marcadores 5 pts'],
+        ['Empates 2 pts', rank.reduce((s,p)=>s+p.stats.drawOnly,0), 'Empate no exacto'],
         ['Pozo', money(state.prizePool), 'Todo al ganador']
       ].map(([label,value,sub]) => '<div class="metric"><label>' + label + '</label><strong>' + value + '</strong><small>' + sub + '</small></div>').join('');
     }
@@ -922,6 +930,7 @@
         '<span>Líder: <b>' + (leader ? leader.name + ' · ' + leader.stats.total + ' pts' : 'Sin datos') + '</b></span>',
         '<span>Partidos: <b>' + finished + '/72</b></span>',
         '<span>Exactos: <b>' + exacts + '</b></span>',
+        '<span>Empates 2 pts: <b>' + rank.reduce((s,p)=>s+p.stats.drawOnly,0) + '</b></span>',
         '<span>Pozo: <b>' + money(state.prizePool) + '</b></span>'
       ].join('');
     }
@@ -930,7 +939,7 @@
       document.getElementById('statusBanner').innerHTML = '<div class="badge done">9/9</div><div><strong>Participantes completos.</strong><br>Paula Vivas ya quedó agregada y los marcadores actuales de la imagen están precargados.</div>';
       renderNextMatchCard();
       const top = ranking().slice(0,5);
-      document.getElementById('leaderPreview').innerHTML = top.map((p,i) => '<div class="leader-mini"><div class="pos">' + (i+1) + '</div><div><b>' + p.name + '</b><small>' + p.stats.exact + ' exactos · ' + p.stats.signOnly + ' ganadores · ' + p.stats.missed + ' fallos</small></div><strong>' + p.stats.total + '</strong></div>').join('');
+      document.getElementById('leaderPreview').innerHTML = top.map((p,i) => '<div class="leader-mini"><div class="pos">' + (i+1) + '</div><div><b>' + p.name + '</b><small>' + p.stats.exact + ' exactos · ' + p.stats.signOnly + ' ganadores · ' + p.stats.drawOnly + ' empates · ' + p.stats.missed + ' fallos</small></div><strong>' + p.stats.total + '</strong></div>').join('');
       const done = MATCHES.filter(m => hasScore(state.results[m.n])).sort((a,b)=>a.n-b.n);
       document.getElementById('liveResults').innerHTML = done.length ? done.map(m => {
         const r = state.results[m.n];
@@ -1022,7 +1031,7 @@
           const pred = p.predictions[m.n];
           const real = state.results[m.n];
           const pts = scorePrediction(pred, real);
-          return '<div class="bet-mini"><div class="teams">#' + m.n + ' · ' + flag(m.h) + ' ' + m.h + ' vs ' + m.a + ' ' + flag(m.a) + '</div><b class="mono">' + pred.h + '-' + pred.a + '</b><span class="badge ' + (pts === 5 ? 'p5' : pts === 3 ? 'p3' : pts === 0 ? 'p0' : 'pending') + '">' + (pts === null ? 'Pend.' : pts + ' pts') + '</span></div>';
+          return '<div class="bet-mini"><div class="teams">#' + m.n + ' · ' + flag(m.h) + ' ' + m.h + ' vs ' + m.a + ' ' + flag(m.a) + '</div><b class="mono">' + pred.h + '-' + pred.a + '</b><span class="badge ' + scoreStateClass(pts) + '">' + (pts === null ? 'Pend.' : pts + ' pts') + '</span></div>';
         }).join('') + '</div></details>';
       }).join('') + '</div></details>';
     }
@@ -1034,7 +1043,7 @@
         if (!p) return '<div class="podium-card"><div class="empty">Pendiente</div></div>';
         return '<div class="podium-card ' + (place === 1 ? 'first' : '') + '"><div><div class="medal">' + (place === 1 ? '🥇' : place === 2 ? '🥈' : '🥉') + '</div><h4>' + p.name + '</h4><small class="muted">' + playerInsightText(p) + '</small></div><strong>' + p.stats.total + ' pts</strong></div>';
       }).join('');
-      document.getElementById('rankingBody').innerHTML = rank.map((p,i) => '<tr class="' + (i===0?'top':'') + '"><td><b>' + (i+1) + '</b></td><td><b>' + p.name + '</b><div class="rank-detail">' + playerInsightText(p) + '</div><button class="btn rank-detail-btn" data-rank-detail="' + escapeAttr(p.name) + '">Ver detalle</button></td><td class="num"><b>' + p.stats.total + '</b></td><td class="num green">' + p.stats.exact + '</td><td class="num orange">' + p.stats.signOnly + '</td><td class="num gray">' + p.stats.missed + '</td><td class="num">' + (i === 0 ? money(state.prizePool) : '$0') + '</td></tr>').join('');
+      document.getElementById('rankingBody').innerHTML = rank.map((p,i) => '<tr class="' + (i===0?'top':'') + '"><td><b>' + (i+1) + '</b></td><td><b>' + p.name + '</b><div class="rank-detail">' + playerInsightText(p) + '</div><button class="btn rank-detail-btn" data-rank-detail="' + escapeAttr(p.name) + '">Ver detalle</button></td><td class="num"><b>' + p.stats.total + '</b></td><td class="num green">' + p.stats.exact + '</td><td class="num orange">' + p.stats.signOnly + '</td><td class="num cyan">' + p.stats.drawOnly + '</td><td class="num gray">' + p.stats.missed + '</td><td class="num">' + (i === 0 ? money(state.prizePool) : '$0') + '</td></tr>').join('');
       document.querySelectorAll('[data-rank-detail]').forEach(btn => btn.addEventListener('click', () => {
         selectedPlayer = btn.dataset.rankDetail;
         matchFilter = '';
@@ -1084,6 +1093,7 @@
         { label: 'Puntos', value: stats.total + ' pts', cls: 'cyan', note: 'Total actual' },
         { label: 'Exactos', value: stats.exact, cls: 'green', note: '5 pts' },
         { label: 'Ganadores', value: stats.signOnly, cls: 'orange', note: '3 pts' },
+        { label: 'Empates', value: stats.drawOnly, cls: 'cyan', note: '2 pts' },
         { label: 'Fallos', value: stats.missed, cls: 'gray', note: '0 pts' },
         { label: 'Pendientes', value: stats.pending, cls: '', note: 'Sin resultado' },
         ...insights.map(i => ({ label: i.title, value: i.body, cls: 'cyan', note: '' }))
@@ -1155,7 +1165,8 @@
       const pos = rank.findIndex(p => p.name === player.name) + 1;
       const leader = rank[0];
       const bestGroup = GROUPS.map(g => ({ g, stats: participantStats(player, groupMatches(g)) })).sort((a,b)=>b.stats.total-a.stats.total || b.stats.exact-a.stats.exact)[0];
-      const exactRate = stats.exact + stats.signOnly + stats.missed ? Math.round((stats.exact / (stats.exact + stats.signOnly + stats.missed)) * 100) : 0;
+      const finishedCount = stats.exact + stats.signOnly + stats.drawOnly + stats.missed;
+      const exactRate = finishedCount ? Math.round((stats.exact / finishedCount) * 100) : 0;
       return [
         { title: 'Posición actual', body: '#' + pos + ' de ' + rank.length + (pos === 1 ? '. Va liderando el pozo.' : '. Está a ' + Math.max(0, leader.stats.total - stats.total) + ' puntos del líder.') },
         { title: 'Grupo más fuerte', body: 'Su mejor rendimiento va en el Grupo ' + bestGroup.g + ' con ' + bestGroup.stats.total + ' puntos.' },
@@ -1167,6 +1178,7 @@
       const s = player.stats || participantStats(player);
       if (s.exact > 0) return 'Ya clavó ' + s.exact + ' marcador' + (s.exact === 1 ? '' : 'es') + ' exacto' + (s.exact === 1 ? '' : 's') + '.';
       if (s.signOnly >= 3) return 'Está acertando ganadores, aunque sin exactos todavía.';
+      if (s.drawOnly > 0) return 'Ya sumó con empate acertado de 2 puntos.';
       if (s.missed === 0) return 'Sigue sin fallos en partidos finalizados.';
       return 'Necesita un exacto para acelerar en la tabla.';
     }
@@ -1174,6 +1186,7 @@
     function scoreStateClass(pts) {
       if (pts === 5) return 'p5';
       if (pts === 3) return 'p3';
+      if (pts === 2) return 'p2';
       if (pts === 0) return 'p0';
       return 'pending';
     }
@@ -1181,6 +1194,7 @@
     function pointsLabel(pts) {
       if (pts === 5) return '+5 exacto';
       if (pts === 3) return '+3 ganador';
+      if (pts === 2) return '+2 empate';
       if (pts === 0) return '0 pts';
       return 'Pendiente';
     }

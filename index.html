@@ -1109,6 +1109,9 @@
     function filterMatches(matches) {
       const q = normalizeText(matchFilter);
       if (!q) return matches;
+      // ponytail: datalist values start with #partido; use that stable id before matching text.
+      const selectedMatch = q.match(/#\s*(\d+)/);
+      if (selectedMatch) return matches.filter(m => m.n === Number(selectedMatch[1]));
       return matches.filter(m => {
         const haystack = normalizeText([m.n, '#' + m.n, 'grupo ' + m.g, m.g, m.h, m.a, m.h + ' vs ' + m.a].join(' '));
         return haystack.includes(q);

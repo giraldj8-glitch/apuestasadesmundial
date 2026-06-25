@@ -533,6 +533,67 @@
     .marquee-item label { color: var(--gray); font-size: .72rem; text-transform: uppercase; font-weight: 900; }
     .marquee-item strong { font-size: 1.05rem; }
     .marquee-item span { color: var(--muted); font-size: .86rem; }
+    .recent-points-panel {
+      border-color: rgba(34,199,216,.28);
+      background: linear-gradient(135deg, rgba(34,199,216,.1), rgba(37,43,53,.9) 54%, rgba(255,180,67,.08));
+    }
+    .recent-points-panel .section-head p { max-width: 760px; }
+    .recent-points-strip {
+      margin-top: 12px;
+      border: 0;
+      border-radius: var(--radius);
+      background: rgba(17,20,25,.28);
+      mask-image: none;
+    }
+    .recent-points-strip .marquee-track {
+      align-items: stretch;
+      animation-duration: 44s;
+      padding: 4px 0;
+    }
+    .recent-points-card {
+      width: min(380px, 88vw);
+      min-height: 118px;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: var(--radius);
+      padding: 11px;
+      color: var(--white);
+      background: rgba(37,43,53,.92);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+      display: grid;
+      gap: 9px;
+      text-align: left;
+    }
+    button.recent-points-card { cursor: pointer; }
+    .recent-points-card:hover { border-color: rgba(255,180,67,.5); transform: translateY(-1px); }
+    .recent-points-head { display: flex; justify-content: space-between; gap: 10px; align-items: center; min-width: 0; }
+    .recent-points-name { min-width: 0; }
+    .recent-points-name b { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .recent-points-name small { color: var(--gray); font-size: .76rem; }
+    .recent-points-list { display: flex; gap: 8px; overflow: hidden; }
+    .recent-point {
+      min-width: 108px;
+      display: grid;
+      gap: 3px;
+      padding: 8px 9px;
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.045);
+    }
+    .recent-point strong { font-size: .96rem; line-height: 1; }
+    .recent-point span { color: var(--white); font-size: .74rem; font-weight: 850; }
+    .recent-point small { color: var(--muted); font-size: .68rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .recent-flags { display: flex; align-items: center; gap: 5px; font-size: 1rem; line-height: 1.1; }
+    .recent-flags b {
+      padding: 2px 6px;
+      border-radius: var(--pill);
+      color: var(--white);
+      background: rgba(17,20,25,.45);
+      font-size: .78rem;
+      font-variant-numeric: tabular-nums;
+    }
+    .recent-point.p5 { border-color: rgba(50,216,148,.42); background: rgba(50,216,148,.11); }
+    .recent-point.p3 { border-color: rgba(255,180,67,.42); background: rgba(255,180,67,.1); }
+    .recent-point.p2 { border-color: rgba(34,199,216,.42); background: rgba(34,199,216,.1); }
 
     @keyframes marqueeSlide {
       from { transform: translateX(0); }
@@ -584,6 +645,14 @@
       .home-guide { display: flex; overflow-x: auto; padding-bottom: 4px; }
       .home-guide button { min-width: 148px; }
       .next-bets-grid { grid-template-columns: 1fr; }
+      .recent-points-panel { padding: 12px; }
+      .recent-points-card { width: 292px; min-height: 106px; padding: 10px; }
+      .recent-points-list { gap: 6px; }
+      .recent-point { min-width: 82px; padding: 7px; }
+      .recent-point strong { font-size: .9rem; }
+      .recent-flags { gap: 3px; font-size: .9rem; }
+      .recent-flags b { padding: 2px 5px; font-size: .72rem; }
+      .recent-point small { font-size: .64rem; }
     }
 
     @media print {
@@ -681,6 +750,10 @@
             <button id="homeAdminBtn" type="button"><b>Admin</b><span>Clave y exportar</span></button>
           </div>
           <div id="nextMatchCard"></div>
+          <div class="card recent-points-panel">
+            <div class="section-head"><div><h3>Últimos puntos ganados</h3><p>Los 3 aciertos más recientes de cada apostador, para ver rápido quién sumó sin bajar por todos los partidos.</p></div><button class="btn" data-go="search">Ver detalle</button></div>
+            <div id="homeRecentPoints"></div>
+          </div>
           <div class="home-grid">
             <div class="card">
               <div class="section-head"><div><h3>Quién va ganando</h3><p>Top actual con partidos finalizados.</p></div><button class="btn primary" data-go="ranking">Ver top</button></div>
@@ -701,6 +774,10 @@
         <section id="screen-ranking" class="screen">
           <div class="section-head"><div><h3>Top Apostadores</h3><p>Desempate: puntos, exactos, aciertos de ganador, empates acertados y nombre.</p></div></div>
           <div class="podium" id="podium"></div>
+          <div class="card recent-points-panel">
+            <div class="section-head"><div><h3>Últimos puntos del top</h3><p>Movimiento reciente por apostador antes de revisar la tabla completa.</p></div></div>
+            <div id="rankingRecentPoints"></div>
+          </div>
           <div class="table-wrap"><table class="rank-table"><thead><tr><th>#</th><th>Nombre</th><th class="num">Puntos</th><th class="num">5 pts</th><th class="num">3 pts</th><th class="num">2 pts</th><th class="num">0 pts</th><th class="num">Premio</th></tr></thead><tbody id="rankingBody"></tbody></table></div>
         </section>
 
@@ -878,7 +955,7 @@
       document.querySelectorAll('.nav button').forEach(b => b.classList.toggle('active', b.dataset.screen === name));
       updateHomeOnly(name);
       if (name === 'results') renderResults();
-      if (name === 'ranking') renderRanking();
+      if (name === 'ranking') { renderRanking(); renderRecentPoints(); }
       if (name === 'groups') renderStandings();
       if (name === 'search') renderPlayerTools();
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -890,7 +967,7 @@
       });
     }
 
-    function renderAll() { renderAdmin(); renderMetrics(); renderMiniStatus(); renderHome(); renderRanking(); renderResults(); renderStandings(); renderPlayerTools(); renderFilterOptions(); renderGlobalSearchOptions(); }
+    function renderAll() { renderAdmin(); renderMetrics(); renderMiniStatus(); renderHome(); renderRanking(); renderRecentPoints(); renderResults(); renderStandings(); renderPlayerTools(); renderFilterOptions(); renderGlobalSearchOptions(); }
 
     function renderAdmin() {
       const adminActions = document.getElementById('adminActions');
@@ -1007,7 +1084,7 @@
       else if (hv !== '' && av !== '') state.results[match] = { h: Number(hv), a: Number(av) };
       else delete state.results[match];
       saveState(true);
-      renderMetrics(); renderMiniStatus(); renderHome(); renderRanking(); renderStandings(); renderPlayerTools();
+      renderMetrics(); renderMiniStatus(); renderHome(); renderRanking(); renderRecentPoints(); renderStandings(); renderPlayerTools();
       if ((hv !== '' && av !== '') || (hv === '' && av === '')) renderResults();
     }
 
@@ -1050,6 +1127,41 @@
         document.getElementById('playerSearch').value = '';
         setScreen('search');
       }));
+    }
+
+    function recentPoints(player, limit = 3) {
+      return matchesByNumber().map(m => {
+        const real = state.results[m.n];
+        const pred = player.predictions[m.n];
+        const pts = scorePrediction(pred, real);
+        return pts > 0 ? { match: m, real, pred, pts } : null;
+      }).filter(Boolean).sort((a,b) => new Date(b.match.d) - new Date(a.match.d) || b.match.n - a.match.n).slice(0, limit);
+    }
+
+    function renderRecentPoints() {
+      const html = recentPointsTicker();
+      ['homeRecentPoints', 'rankingRecentPoints'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.innerHTML = html;
+      });
+      document.querySelectorAll('[data-recent-player]').forEach(btn => btn.addEventListener('click', () => {
+        selectedPlayer = btn.dataset.recentPlayer;
+        matchFilter = '';
+        document.getElementById('playerSearch').value = '';
+        setScreen('search');
+      }));
+    }
+
+    function recentPointsTicker() {
+      const cards = ranking().map(p => {
+        const gains = recentPoints(p).map(item => {
+          const m = item.match;
+          const title = m.h + ' ' + item.real.h + '-' + item.real.a + ' ' + m.a;
+          return '<span class="recent-point ' + scoreStateClass(item.pts) + '" title="' + escapeAttr(title) + '"><strong>+' + item.pts + '</strong><span class="recent-flags">' + flag(m.h) + '<b>' + item.real.h + '-' + item.real.a + '</b>' + flag(m.a) + '</span><small>#' + m.n + ' · ' + pointsLabel(item.pts).replace('+', '') + '</small></span>';
+        }).join('') || '<span class="recent-point"><strong>0</strong><span class="recent-flags">—</span><small>Aún no suma</small></span>';
+        return '<button class="recent-points-card" type="button" data-recent-player="' + escapeAttr(p.name) + '"><div class="recent-points-head"><div class="recent-points-name"><b>' + escapeHtml(p.name) + '</b><small>Últimos 3 que sumaron</small></div><span class="badge done">' + p.stats.total + ' pts</span></div><div class="recent-points-list">' + gains + '</div></button>';
+      });
+      return '<div class="player-marquee recent-points-strip" aria-label="Últimos puntos ganados por apostador"><div class="marquee-track">' + cards.concat(cards).join('') + '</div></div>';
     }
 
     function renderPlayerTools() {
@@ -1239,7 +1351,7 @@
       const clone = document.documentElement.cloneNode(true);
       const stateTag = clone.querySelector('#embedded-state');
       if (stateTag) stateTag.textContent = JSON.stringify(state).replace(/</g, '\u003c');
-      ['metrics','statusBanner','nextMatchCard','leaderPreview','liveResults','resultsGroups','podium','rankingBody','matchFilterOptions','playerChips','playerResult','standingsGroups','globalSearchOptions','miniStatus'].forEach(id => {
+      ['metrics','statusBanner','nextMatchCard','homeRecentPoints','leaderPreview','liveResults','resultsGroups','podium','rankingRecentPoints','rankingBody','matchFilterOptions','playerChips','playerResult','standingsGroups','globalSearchOptions','miniStatus'].forEach(id => {
         const el = clone.querySelector('#' + id);
         if (el) el.innerHTML = '';
       });
